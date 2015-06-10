@@ -91,10 +91,8 @@ def build_graph(coords, nodes, ways, directed=True):
         if n in graph_nodes:
             g.node[n].update(tags)
 
-    def node_distance(n1, n2):
+    def node_distance(g, n1, n2):
         return utils.distance(g.node[n1]['coordinates'], g.node[n2]['coordinates'])
 
     utils.assign_weights(g, node_distance, attr='length') 
     return g
-
-
