@@ -9,6 +9,11 @@ import networkx as nx
 
 from . import utils
 
+highway_types = {
+    'motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'residential',
+    'service', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link',
+    'tertiary_link'}
+
 
 def parse_file(filename):
     coords = {}
@@ -58,7 +63,11 @@ def nodes_callback(d, elements):
 
 
 def ways_callback(d, elements):
-    highways = itertools.ifilter(lambda e: 'highway' in e[1], elements)
+    def keep_ways(e):
+        tags = e[1]
+        return (tags.get('highway') in highway_types and
+                tags.get('access') != 'no')
+    highways = itertools.ifilter(keep_ways, elements)
     for way_id, tags, node_ids in highways:
         if tags.get('oneway') == '-1':
             # oneway=-1 means interpret one way as the opposite direction
