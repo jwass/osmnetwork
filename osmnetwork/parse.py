@@ -41,9 +41,15 @@ def parse_bbox(bbox):
     r = requests.get(url, params=params)
     r.raise_for_status()
 
+    content = parse_content(r.content)
+
+    return content
+
+
+def parse_content(content):
     fd, pathname = tempfile.mkstemp(suffix='.osm')
     try:
-        os.write(fd, r.content)
+        os.write(fd, content)
         ret = parse_file(pathname)
     finally:
         os.close(fd)
